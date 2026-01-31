@@ -1,9 +1,13 @@
 Blitz's Tv Box is a mod that has a variety of things! 
 
 Enhancements
+
 Editions (soon)
+
 Seals (soon)
+
 Jokers
+
 and Consumables! (soon)
 
 (THESE WILL ALL BE CHANGED SOON.)
