@@ -3,11 +3,11 @@ SMODS.Joker{ --Noisy Joker
     key = "noisyjoker",
     config = {
         extra = {
-            noise_multx = 1,
-            noise_chipx = 1,
             odds = 4,
             odds2 = 6,
-            odds3 = 12
+            odds3 = 12,
+            xmult0 = 2,
+            xchips0 = 1.75
         }
     },
     loc_txt = {
@@ -15,8 +15,7 @@ SMODS.Joker{ --Noisy Joker
         ['text'] = {
             [1] = 'Every blind selected, {C:green}1 in 4{} Chance to create {C:enhanced}Tv Snow{}, {C:green}1 in 6{} Chance to create {C:enhanced}Input Missing{}.',
             [2] = '{C:green}1 in 12{} Chance to create both {C:enhanced}Tv Snow{} and {C:enhanced}Input Missing{}.',
-            [3] = 'For every {C:enhanced}Tv Snow{} and {C:enhanced}Input Missing{} Card in deck, Add {X:chips,C:white}X0.1{} and {X:mult,C:white}X0.15{}.',
-            [4] = '{C:inactive}[Currently {}{X:mult,C:white}#1#{}, {X:chips,C:white}#2#{}{C:inactive}.]{}'
+            [3] = '{C:green}1 in 8{} Chance for every played hand with {C:enhanced}Tv Snow{} or {C:enhanced}Input Missing{} Card to give {X:mult,C:white}x2{} Mult and {X:chips,C:white}x1.75{} Chips.'
         },
         ['unlock'] = {
             [1] = 'Skip 8 Blinds in one run'
@@ -65,7 +64,7 @@ SMODS.Joker{ --Noisy Joker
         local new_numerator, new_denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'j_blitzstv_noisyjoker')
         local new_numerator2, new_denominator2 = SMODS.get_probability_vars(card, 1, card.ability.extra.odds2, 'j_blitzstv_noisyjoker')
         local new_numerator3, new_denominator3 = SMODS.get_probability_vars(card, 1, card.ability.extra.odds3, 'j_blitzstv_noisyjoker')
-        return {vars = {card.ability.extra.noise_multx, card.ability.extra.noise_chipx, new_numerator, new_denominator, new_numerator2, new_denominator2, new_numerator3, new_denominator3}}
+        return {vars = {new_numerator, new_denominator, new_numerator2, new_denominator2, new_numerator3, new_denominator3}}
     end,
     
     calculate = function(self, card, context)
@@ -183,28 +182,16 @@ SMODS.Joker{ --Noisy Joker
                 end
             end
         end
-        if context.cardarea == G.jokers and context.joker_main  then
-            return {
-                x_chips = card.ability.extra.noise_chipx,
-                extra = {
-                    Xmult = card.ability.extra.noise_multx
+        if context.individual and context.cardarea == G.play  then
+            if (SMODS.get_enhancements(context.other_card)["m_blitzstv_tvsnow"] == true or SMODS.get_enhancements(context.other_card)["m_blitzstv_inputmissing"] == true) then
+                return {
+                    Xmult = 2,
+                    extra = {
+                        x_chips = 1.75,
+                        colour = G.C.DARK_EDITION
+                    }
                 }
-            }
-        end
-        if context.before and context.cardarea == G.jokers  then
-            return {
-                func = function()
-                    card.ability.extra.noise_chipx = (card.ability.extra.noise_chipx) + 0.1
-                    return true
-                end,
-                extra = {
-                    func = function()
-                        card.ability.extra.noise_multx = (card.ability.extra.noise_multx) + 0.15
-                        return true
-                    end,
-                    colour = G.C.GREEN
-                }
-            }
+            end
         end
     end,
     check_for_unlock = function(self,args)

@@ -36,7 +36,7 @@ local NFS = require("nativefs")
 to_big = to_big or function(a) return a end
 lenient_bignum = lenient_bignum or function(a) return a end
 
-local jokerIndexList = {1,2}
+local jokerIndexList = {1,4,2,3}
 
 local function load_jokers_folder()
     local mod_path = SMODS.current_mod.path
@@ -79,6 +79,14 @@ SMODS.ObjectType({
         ["j_popcorn"] = true,
         ["j_ramen"] = true,
         ["j_selzer"] = true
+    },
+})
+
+SMODS.ObjectType({
+    key = "blitzstv_blitzstv_jokers",
+    cards = {
+        ["j_blitzstv_lidar"] = true,
+        ["j_blitzstv_newjoker"] = true
     },
 })
 
